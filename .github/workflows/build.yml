@@ -1,0 +1,25 @@
+name: Build FnMacCrashFix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: isacucho/FnMacCrashFix
+          ref: 326f447731f53bc91f0112ea0b1288b2765e6861
+
+      - name: Build and verify
+        run: |
+          xcrun --sdk iphoneos --show-sdk-path
+          make
+          xcrun lipo -info build/FnMacCrashFix.dylib
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FnMacCrashFix
+          path: build/FnMacCrashFix.dylib
+          if-no-files-found: error
